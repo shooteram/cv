@@ -6,6 +6,7 @@ use App\Topic;
 use Goutte\Client as Goutte;
 use GuzzleHttp\Client as Guzzle;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\DomCrawler\Crawler;
 
 class GetTopicsCommand extends Command
@@ -41,16 +42,25 @@ class GetTopicsCommand extends Command
      */
     public function handle()
     {
+        $seconds = 3600;
+
         $goutte = new Goutte(['headers' => ['accept' => 'text/html']]);
         $guzzle = new Guzzle(['timeout' => 60]);
         $goutte->setClient($guzzle);
 
-        $crawler = $goutte->request('GET', $this->getUri());
+        $crawler = Cache::remember('topics', $seconds, function () use ($goutte) {
+            return $goutte->request('GET', $this->getUri())->html();
+        });
+        $crawler = new Crawler($crawler);
         $this->retrieveFields($crawler);
 
         $after = $crawler->filter('input[name="after"]')->attr('value');
         if ($after) {
-            $crawler = $goutte->request('GET', $this->getUri(['after' => $after]));
+            $crawler = Cache::remember('topics_2', $seconds, function () use ($goutte, $after) {
+                return $goutte->request('GET', $this->getUri(['after' => $after]))->html();
+            });
+            $crawler = new Crawler($crawler);
+
             $this->retrieveFields($crawler);
         }
     }
