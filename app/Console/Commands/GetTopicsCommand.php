@@ -93,15 +93,15 @@ class GetTopicsCommand extends Command
                 return $node->text();
             });
             if (!$description) {
-                $this->info("No description to Github found for topic \"{$name}\".");
+                $this->info("No description found for topic \"{$name}\".");
             }
             $description = count($description) > 0 ? $description[0] : null;
 
-            $image = $node->filter('x')->each(function ($node) {
+            $image = $node->filter('img')->each(function ($node) {
                 return $node->attr('src');
             });
             if (!$image) {
-                $this->info("No image to Github found for topic \"{$name}\".");
+                $this->info("No image found for topic \"{$name}\".");
             }
             $image = count($image) > 0 ? $image[0] : null;
 
