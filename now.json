@@ -1,0 +1,13 @@
+{
+    "version": 2,
+    "name": "cv-laravel",
+    "type": "docker",
+    "env": {
+        "APP_ENV": "production",
+        "APP_DEBUG": false,
+        "APP_NAME": "Laravel - CV"
+    },
+    "features": {
+        "cloud": "v2"
+    }
+}
