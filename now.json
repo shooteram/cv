@@ -1,7 +1,6 @@
 {
     "version": 2,
     "name": "cv-laravel",
-    "type": "docker",
     "env": {
         "APP_ENV": "production",
         "APP_DEBUG": false,
